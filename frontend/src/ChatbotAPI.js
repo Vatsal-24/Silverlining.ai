@@ -1,22 +1,30 @@
-const apiCall = async (message) => {
-  console.log(message);
+const apiCall = async (message, flag) => {
+  console.log(message, flag);
   let ans = "Please try again later";
-  await fetch(`http://127.0.0.1:5000/getAnswer/${message}`)
+  await fetch(`http://127.0.0.1:5000/getAnswer/${message}/${flag}`)
     .then((response) => response.json())
     .then((data) => {
-      ans = data[1][0].summary_text;
+      console.log(data[1]);
+      ans = data[1];
       console.log(ans);
     });
   return ans;
 };
 
 const API = {
-  GetChatbotResponse: async (message) => {
+  GetChatbotResponse: async (message, flag) => {
     return new Promise(function (resolve, reject) {
-      console.log("Me idhar hu");
       setTimeout(function () {
-        if (message === "hi") resolve("Welcome to chatbot!");
-        else resolve(apiCall(message));
+        if (
+          message === "hi" ||
+          message === "Hi" ||
+          message === "Hey" ||
+          message === "hey" ||
+          message === "Hello" ||
+          message === "hello"
+        )
+          resolve("Welcome to SilverLining.ai !");
+        else resolve(apiCall(message, flag));
       });
     });
   },
