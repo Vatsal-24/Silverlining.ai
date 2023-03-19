@@ -25,7 +25,10 @@ function App() {
     setText(e.target.value);
   };
 
-  const openDialog = () => {
+  const openDialog = async (e) => {
+    console.log("hello");
+    e.preventDefault();
+
     if (
       text === "hi" ||
       text === "Hi" ||
@@ -45,31 +48,41 @@ function App() {
       );
       setMessages(newMessages);
       setText("");
-    } else setOpen(true);
+    } else {
+      const newMessages = messages.concat(
+        <UserMessage key={messages.length + 1} text={text} />,
+        <BotMessage
+          key={messages.length + 2}
+          fetchMessage={async () => await API.GetChatbotResponse(text, "no")}
+        />
+      );
+      setMessages(newMessages);
+      setText("");
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
-  const handleAgree = () => {
-    send(text);
-    setOpen(false);
-    setText("");
-  };
+  // const handleAgree = () => {
+  //   send(text);
+  //   setOpen(false);
+  //   setText("");
+  // };
 
-  const handleDisagree = () => {
-    const newMessages = messages.concat(
-      <UserMessage key={messages.length + 1} text={text} />,
-      <BotMessage
-        key={messages.length + 2}
-        fetchMessage={async () => await API.GetChatbotResponse(text, "no")}
-      />
-    );
-    setMessages(newMessages);
-    setOpen(false);
-    setText("");
-  };
+  // const handleDisagree = () => {
+  //   const newMessages = messages.concat(
+  //     <UserMessage key={messages.length + 1} text={text} />,
+  //     <BotMessage
+  //       key={messages.length + 2}
+  //       fetchMessage={async () => await API.GetChatbotResponse(text, "no")}
+  //     />
+  //   );
+  //   setMessages(newMessages);
+  //   setOpen(false);
+  //   setText("");
+  // };
 
   useEffect(() => {
     async function loadWelcomeMessage() {
@@ -83,16 +96,16 @@ function App() {
     loadWelcomeMessage();
   }, []);
 
-  const send = async (text) => {
-    const newMessages = messages.concat(
-      <UserMessage key={messages.length + 1} text={text} />,
-      <BotMessage
-        key={messages.length + 2}
-        fetchMessage={async () => await API.GetChatbotResponse(text, "yes")}
-      />
-    );
-    setMessages(newMessages);
-  };
+  // const send = async (text) => {
+  //   const newMessages = messages.concat(
+  //     <UserMessage key={messages.length + 1} text={text} />,
+  //     <BotMessage
+  //       key={messages.length + 2}
+  //       fetchMessage={async () => await API.GetChatbotResponse(text, "yes")}
+  //     />
+  //   );
+  //   setMessages(newMessages);
+  // };
 
   return (
     <div className="chatbot" style={{ margin: "auto", width: "50%" }}>
@@ -100,14 +113,16 @@ function App() {
       <Messages messages={messages} />
       {/* Input starts */}
       <div className="input">
-        <div className="form">
+        <form className="form" onSubmit={openDialog}>
           <input
+            id="myInput"
             type="text"
             onChange={handleInputChange}
             value={text}
             placeholder="Enter your message here"
+            autoFocus
           />
-          <button type={"button"} onClick={openDialog}>
+          <button id="myBtn" type={"submit"}>
             <svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -122,10 +137,10 @@ function App() {
               </g>
             </svg>
           </button>
-        </div>
+        </form>
       </div>
       {/* Dialog starts */}
-      <Dialog
+      {/* <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -142,7 +157,7 @@ function App() {
             Yes
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }
