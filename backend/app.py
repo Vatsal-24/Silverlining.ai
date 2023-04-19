@@ -4,16 +4,13 @@ from transformers import pipeline
 from flask_cors import CORS, cross_origin
 
 
-pipe = pipeline('summarization', "dominguesm/positive-reframing-en")
+pipe = pipeline('summarization', "iSayli/SilverLining")
 
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = "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"
-# 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
+openai.api_key = "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"
 transformation_type = "['optimism']"
-# text = input("Enter your text:")
-# final_input = transformation_type + text
 
 @app.route('/getAnswer/<string:input>/<string:decision>',methods = ['GET','POST'])
 def reply(input,decision):

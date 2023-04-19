@@ -1,34 +1,23 @@
 import React, { useState, useEffect } from "react";
-
 import BotMessage from "./components/BotMessage";
 import UserMessage from "./components/UserMessage";
 import Messages from "./components/Message";
-import Input from "./components/Input";
-
 import API from "./ChatbotAPI";
-
 import "./styles.css";
-import Button from "@material-ui/core/Button";
 import Header from "./components/Header";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [isButtonClicked, setIsButtonCLicked] = React.useState(false);
 
   const handleInputChange = (e) => {
     setText(e.target.value);
   };
 
-  const openDialog = async (e) => {
+  const submitText = async (e) => {
     console.log("hello");
     e.preventDefault();
-
     if (
       text === "hi" ||
       text === "Hi" ||
@@ -57,32 +46,9 @@ function App() {
         />
       );
       setMessages(newMessages);
-      setText("");
     }
+    setText("");
   };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
-  // const handleAgree = () => {
-  //   send(text);
-  //   setOpen(false);
-  //   setText("");
-  // };
-
-  // const handleDisagree = () => {
-  //   const newMessages = messages.concat(
-  //     <UserMessage key={messages.length + 1} text={text} />,
-  //     <BotMessage
-  //       key={messages.length + 2}
-  //       fetchMessage={async () => await API.GetChatbotResponse(text, "no")}
-  //     />
-  //   );
-  //   setMessages(newMessages);
-  //   setOpen(false);
-  //   setText("");
-  // };
 
   useEffect(() => {
     async function loadWelcomeMessage() {
@@ -96,24 +62,13 @@ function App() {
     loadWelcomeMessage();
   }, []);
 
-  // const send = async (text) => {
-  //   const newMessages = messages.concat(
-  //     <UserMessage key={messages.length + 1} text={text} />,
-  //     <BotMessage
-  //       key={messages.length + 2}
-  //       fetchMessage={async () => await API.GetChatbotResponse(text, "yes")}
-  //     />
-  //   );
-  //   setMessages(newMessages);
-  // };
-
   return (
     <div className="chatbot" style={{ margin: "auto", width: "50%" }}>
       <Header />
       <Messages messages={messages} />
       {/* Input starts */}
       <div className="input">
-        <form className="form" onSubmit={openDialog}>
+        <form className="form" onSubmit={submitText}>
           <input
             id="myInput"
             type="text"
@@ -139,25 +94,6 @@ function App() {
           </button>
         </form>
       </div>
-      {/* Dialog starts */}
-      {/* <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Do you want to reframe this into positive?"}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleDisagree} color="primary">
-            No
-          </Button>
-          <Button onClick={handleAgree} color="primary" autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </div>
   );
 }
