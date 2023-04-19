@@ -9,7 +9,7 @@ pipe = pipeline('summarization', "iSayli/SilverLining")
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = "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"
+openai.api_key = "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"
 transformation_type = "['optimism']"
 
 @app.route('/getAnswer/<string:input>/<string:decision>',methods = ['GET','POST'])

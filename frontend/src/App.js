@@ -42,7 +42,7 @@ function App() {
         <UserMessage key={messages.length + 1} text={text} />,
         <BotMessage
           key={messages.length + 2}
-          fetchMessage={async () => await API.GetChatbotResponse(text, "no")}
+          fetchMessage={async () => await API.GetChatbotResponse(text, "yes")}
         />
       );
       setMessages(newMessages);
