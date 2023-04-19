@@ -28,22 +28,6 @@ const API = {
       });
     });
   },
-  GetChatGPTResponse: async (message, flag) => {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        if (
-          message === "hi" ||
-          message === "Hi" ||
-          message === "Hey" ||
-          message === "hey" ||
-          message === "Hello" ||
-          message === "hello"
-        )
-          resolve("Welcome to SilverLining.ai !");
-        else resolve(apiCall(message, flag));
-      });
-    });
-  },
 };
 
 export default API;
