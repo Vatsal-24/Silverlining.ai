@@ -8,23 +8,34 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { useSpeechSynthesis } from "react-speech-kit";
+import Button from "@material-ui/core/Button";
+import MicIcon from "@material-ui/icons/Mic";
+import SendIcon from "@material-ui/icons/Send";
+import Grid from "@material-ui/core/Grid";
 
+const style = {
+  inputField: {
+    width: "100%",
+    padding: "12px 20px",
+    margin: "0px",
+    display: "inline-block",
+    border: "1px solid #ccc",
+    borderRadius: "2px",
+    boxSizing: "border-box",
+    fontFamily: "Monospace",
+  },
+  icons: {
+    textAlign: "center",
+    color: "#5e5c5c",
+    marginTop: "5px",
+    cursor: "pointer",
+  },
+};
 function App() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const [isButtonClicked, setIsButtonCLicked] = React.useState(false);
-
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  const { transcript, resetTranscript } = useSpeechRecognition();
   const { speak } = useSpeechSynthesis();
-
-  const handleInputChange = (e) => {
-    setText(e.target.value);
-  };
 
   const GetChatbotResponse = async (message, flag) => {
     if (
@@ -52,7 +63,6 @@ function App() {
 
   const submitText = async (e) => {
     let input = "";
-    let output = "";
     transcript === "" ? (input = text) : (input = transcript);
 
     e.preventDefault();
@@ -83,8 +93,7 @@ function App() {
         <BotMessage
           key={messages.length + 2}
           fetchMessage={async () => {
-            const res = await GetChatbotResponse(input, "yes");
-            output = res;
+            const res = await GetChatbotResponse(input, "Yes");
             return res;
           }}
         />
@@ -96,13 +105,16 @@ function App() {
   };
 
   useEffect(() => {
-    async function loadWelcomeMessage() {
+    function loadWelcomeMessage() {
       setMessages([
         <BotMessage
           key="0"
           fetchMessage={async () => await GetChatbotResponse("hi")}
         />,
       ]);
+      speak({
+        text: "You can share your negative thoughts here, I'll try my best to lift up your mood!",
+      });
     }
     loadWelcomeMessage();
   }, []);
@@ -112,35 +124,27 @@ function App() {
       <Header />
       <Messages messages={messages} />
       {/* Input starts */}
-      <div className="input">
-        <form className="form" onSubmit={submitText}>
-          <input
-            id="myInput"
-            type="text"
-            onChange={handleInputChange}
-            value={text || transcript}
-            placeholder="Enter your message here"
-            autoFocus
+      <Grid container>
+        <Grid item sm={10}>
+          <form onSubmit={submitText}>
+            <input
+              onChange={(e) => setText(e.target.value)}
+              value={text || transcript}
+              style={style.inputField}
+              placeholder="Share your thoughts here..."
+            />
+          </form>
+        </Grid>
+        <Grid item sm={1}>
+          <MicIcon
+            onClick={SpeechRecognition.startListening}
+            style={style.icons}
           />
-
-          <button type={"submit"}>
-            <svg
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 500 500"
-            >
-              <g>
-                <g>
-                  <polygon points="0,497.25 535.5,267.75 0,38.25 0,216.75 382.5,267.75 0,318.75" />
-                </g>
-              </g>
-            </svg>
-          </button>
-        </form>
-        <button onClick={SpeechRecognition.startListening}>Start</button>
-      </div>
+        </Grid>
+        <Grid item sm={1}>
+          <SendIcon onClick={submitText} style={style.icons} />
+        </Grid>
+      </Grid>
     </div>
   );
 }
