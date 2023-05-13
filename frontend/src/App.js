@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 import MicIcon from "@material-ui/icons/Mic";
 import SendIcon from "@material-ui/icons/Send";
 import Grid from "@material-ui/core/Grid";
+import axios from "axios";
 
 const style = {
   inputField: {
@@ -50,12 +51,13 @@ function App() {
       return "Welcome to SilverLining.ai !";
     } else {
       let ans = "Please try again later";
-      await fetch(`http://127.0.0.1:5000/getAnswer/${message}/${flag}`)
-        .then((response) => response.json())
-        .then((data) => {
-          ans = data[1];
-          console.log(ans);
-        });
+      let obj = {
+        message: message,
+      };
+      await axios.post(`http://127.0.0.1:5000/getAnswer`, obj).then((res) => {
+        ans = res.data[1];
+        console.log(res.data);
+      });
       speak({ text: ans });
       return ans;
     }

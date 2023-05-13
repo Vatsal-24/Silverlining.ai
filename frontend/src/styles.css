@@ -44,6 +44,7 @@
     color: white;
     min-width: 40px;
     max-width: 80%;
+    font-size: 16px;
   }
   
   .user-message {
@@ -53,6 +54,7 @@
     border-radius: 20px 20px 1px 20px;
     background: #cccccc;
     color: black;
+    font-size: 16px;
   }
   
   .input {
@@ -64,7 +66,7 @@
   
   .input > .form > input[type="text"] {
     font-family: monospace;
-    font-size: 16px;
+    font-size: 42px;
     border: 0;
     border-radius: 0;
     border-bottom-left-radius: 10px;

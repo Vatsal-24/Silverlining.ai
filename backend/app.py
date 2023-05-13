@@ -1,7 +1,9 @@
-from flask import Flask,jsonify
+from flask import Flask,jsonify,request
 import openai
 from transformers import pipeline
 from flask_cors import CORS, cross_origin
+import random
+
 
 pipe = pipeline('summarization', "iSayli/SilverLining")
 sentiment_pipeline = pipeline("sentiment-analysis")
@@ -9,20 +11,25 @@ sentiment_pipeline = pipeline("sentiment-analysis")
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = "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"
-transformation_type = "['growth']"
+openai.api_key = "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"
+transformation_type = "['thankfulness']: "
 
-@app.route('/getAnswer/<string:input>/<string:decision>',methods = ['GET','POST'])
-def reply(input,decision):
-    print(input, decision)
-    sentiment = sentiment_pipeline(input)
+greet = ["It's okay to feel so, think of it in this way, ", "Think of it in this way, ", "I understand it's difficult but you can say, ","I get its hard but you can think of it this way, " ]
+@app.route('/getAnswer',methods = ['GET','POST'])
+def reply():
+    # print(input, decision)/
+    print(request,"sdsdkjsjd")
+    inp = str(request.json.get("message"))
+    print(inp)
+    final=transformation_type + inp
+    sentiment = sentiment_pipeline(inp)
     print(sentiment[0]["label"])
     if sentiment[0]['label'] == "NEGATIVE":
-        answer = pipe(input, max_length=1024)
+        answer = pipe( final, max_length=1024)
         print(answer[0]["summary_text"])
-        return jsonify("reply",answer[0]["summary_text"])
+        return jsonify("reply",random.choice(greet) + answer[0]["summary_text"])
     else:
-        ask = input + ". Reframe this into positive in 1 line."
+        ask = inp + ".\n This is user's input, please identify the sentiment and return something optimistic. Limit to 50 words. "
         response = openai.Completion.create(
         model="text-davinci-003",
         prompt=ask,
